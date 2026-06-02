@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
 
     [Header("Movement")]
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float moveSpeed = 4.0f;
     private Vector2 moveInput;
 
     void Start()
