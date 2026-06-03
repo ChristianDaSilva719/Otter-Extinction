@@ -10,12 +10,15 @@ public class Interaction : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            GM.intPerDay += 1;
-            if (GM.intPerDay != GM.amountOfInterations + 1)
+            if (Input.GetKeyDown("e"))
             {
-                GM.volume.weight += GM.additionPerDay;
+                GM.intPerDay += 1;
+                if (GM.intPerDay != GM.amountOfInterations + 1)
+                {
+                    GM.volume.weight += GM.additionPerDay;
+                }
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
         }
     }
 }
