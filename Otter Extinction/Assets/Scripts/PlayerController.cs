@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed = 5.0f;
 
     private Vector2 moveInput;
+
     // Dashing
     [Header("Dashing")]
     [SerializeField] private float dashCooldown = 0.3f;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private bool canDash = true;
     private bool isDashing;
 
+    bool canMove;
 
     void Start()
     {
@@ -29,15 +31,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get player inputs
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        // Normalize movement
-        moveInput.Normalize();
-
-        if (Input.GetKeyDown(KeyCode.Space) && canDash)
+        if (canMove == true)
         {
-            StartCoroutine(Dash());
+            // Get player inputs
+            moveInput.x = Input.GetAxisRaw("Horizontal");
+            moveInput.y = Input.GetAxisRaw("Vertical");
+            // Normalize movement
+            moveInput.Normalize();
+
+            if (Input.GetKeyDown(KeyCode.Space) && canDash)
+            {
+                StartCoroutine(Dash());
+            }
         }
     }
 
@@ -54,7 +59,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        
+
         // add velocity direction pressed+ dashforce
         rb.linearVelocity = moveInput * dashForce;
         tr.emitting = true;
@@ -62,9 +67,26 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashDuration);
         tr.emitting = false;
         isDashing = false;
-        
+
         // Cooldown before dashing again
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Water")
+        {
+            canMove = false;
+            rb.gravityScale = 1;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Water")
+        {
+            canMove = true;
+            rb.gravityScale = 0;
+        }
     }
 }
