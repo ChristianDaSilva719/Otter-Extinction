@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Interaction : MonoBehaviour
 {
@@ -8,28 +7,25 @@ public class Interaction : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && Interacting)
         {
-            if (Interacting == true)
-            {
-                GM.intPerDay += 1;
-                if (GM.intPerDay != GM.amountOfInterations + 1)
-                {
-                    GM.volume.weight += GM.additionPerDay;
-                }
-                Destroy(gameObject);
-            }
+            GM.AdvanceTime();
+            Destroy(gameObject);
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             Interacting = true;
             Debug.Log("Interacting");
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
         {
             Interacting = false;
             Debug.Log("Not Interacting");
