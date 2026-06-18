@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b9853b6d97c43ce48a55d01049d0826b
+guid: 38475e400d75e324cb94d3040f4ca4c4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7028346892811113895
-    second: Urchin_Dead_0
+      213: 7115259164338374419
+    second: Trash_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Urchin_Dead_0
+      name: Trash_2_0
       rect:
         serializedVersion: 2
-        x: 1
+        x: 2
         y: 1
-        width: 14
-        height: 14
+        width: 13
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7a51a30e244b98160800000000000000
-      internalID: 7028346892811113895
+      spriteID: 3174b3ff28a7eb260800000000000000
+      internalID: 7115259164338374419
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Urchin_Dead_0: 7028346892811113895
+      Trash_2_0: 7115259164338374419
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -4,13 +4,27 @@ public class Interaction : MonoBehaviour
 {
     public GameManager GM;
     private bool Interacting;
+    public GameObject PressE;
+    public Minigame minigame;
+    public GameObject interactedObject;
 
+    private void Start()
+    {
+        PressE.SetActive(false);
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && Interacting)
+        if (Input.GetKeyDown(KeyCode.E) && Interacting && !minigame.MinigameObject.activeSelf)
+        {
+            interactedObject = gameObject;
+            minigame.ResetMinigame();
+            minigame.MinigameObject.SetActive(true);
+        }
+        if (minigame.finished == true)
         {
             GM.AdvanceTime();
-            Destroy(gameObject);
+            minigame.finished = false;
+            Destroy(interactedObject);
         }
     }
 
@@ -18,6 +32,7 @@ public class Interaction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PressE.SetActive(true);
             Interacting = true;
             Debug.Log("Interacting");
         }
@@ -27,6 +42,7 @@ public class Interaction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PressE.SetActive(true);
             Interacting = false;
             Debug.Log("Not Interacting");
         }

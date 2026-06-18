@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Interactable
   - Water
+  - Bed
   layers:
   - Default
   - TransparentFX

@@ -26,11 +26,7 @@ public class GameManager : MonoBehaviour
         additionPerDay = 1f / amountOfInterations;
 
         // Smoothly move towards the target weight
-        volume.weight = Mathf.Lerp(
-            volume.weight,
-            targetWeight,
-            lerpSpeed * Time.deltaTime
-        );
+        volume.weight = Mathf.Lerp(volume.weight, targetWeight, lerpSpeed * Time.deltaTime);
 
         // Snap when very close
         if (Mathf.Abs(volume.weight - targetWeight) < 0.001f)
