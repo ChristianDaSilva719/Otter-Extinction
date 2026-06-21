@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private TrailRenderer tr;
+    private SpriteRenderer sr;
+    private Animator animator;
 
     [Header("Movement")]
     private float moveSpeed = 5.0f;
@@ -22,13 +24,17 @@ public class PlayerController : MonoBehaviour
 
     bool canMove;
 
+    // Animation
+    private static readonly int IsSwimmingHash = Animator.StringToHash("IsSwimming");
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         tr = GetComponent<TrailRenderer>();
+        sr = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (canMove == true)
@@ -39,11 +45,31 @@ public class PlayerController : MonoBehaviour
             // Normalize movement
             moveInput.Normalize();
 
+            // Flip sprite to face movement direction (default sprite faces right)
+            if (moveInput.x > 0)
+                sr.flipX = false;
+            else if (moveInput.x < 0)
+                sr.flipX = true;
+
             if (Input.GetKeyDown(KeyCode.Space) && canDash)
             {
                 StartCoroutine(Dash());
             }
         }
+        else
+        {
+            moveInput = Vector2.zero;
+        }
+
+        UpdateAnimationState();
+    }
+
+    private void UpdateAnimationState()
+    {
+        if (animator == null) return;
+
+        bool isSwimming = canMove && moveInput.sqrMagnitude > 0.01f;
+        animator.SetBool(IsSwimmingHash, isSwimming);
     }
 
     private void FixedUpdate()
@@ -60,7 +86,6 @@ public class PlayerController : MonoBehaviour
         canDash = false;
         isDashing = true;
 
-        // add velocity direction pressed+ dashforce
         rb.linearVelocity = moveInput * dashForce;
         tr.emitting = true;
 
@@ -68,7 +93,6 @@ public class PlayerController : MonoBehaviour
         tr.emitting = false;
         isDashing = false;
 
-        // Cooldown before dashing again
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }

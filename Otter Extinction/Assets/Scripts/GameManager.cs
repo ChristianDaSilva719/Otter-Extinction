@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Day/Night Settings")]
     public float lerpSpeed = 2f;
+    public int Days;
 
     [HideInInspector]
     public float additionPerDay;
