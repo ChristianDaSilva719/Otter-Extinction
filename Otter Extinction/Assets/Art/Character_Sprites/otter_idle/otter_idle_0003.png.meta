@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0aa8d850396c8704c8de2ae1aa2e8499
+guid: 82fd645d2b3e30b4dbb1200aad0717e2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5004068679300657440
-    second: LKelp_Yellow_0
+      213: -3941560241263312729
+    second: otter_idle_0003_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LKelp_Yellow_0
+      name: otter_idle_0003_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 0
-        width: 172
-        height: 168
+        x: 0
+        y: 6
+        width: 64
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 021bf5d73f5027540800000000000000
-      internalID: 5004068679300657440
+      spriteID: 7a082b608d3cc49c0800000000000000
+      internalID: -3941560241263312729
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LKelp_Yellow_0: 5004068679300657440
+      otter_idle_0003_0: -3941560241263312729
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

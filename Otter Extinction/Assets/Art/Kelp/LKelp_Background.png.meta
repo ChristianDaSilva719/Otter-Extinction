@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0aa8d850396c8704c8de2ae1aa2e8499
+guid: 052e9ebecfe4b6b44b9c6a87fd4bfb69
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5004068679300657440
-    second: LKelp_Yellow_0
+      213: -3762716373873900371
+    second: LKelp_Background_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LKelp_Yellow_0
+      name: LKelp_Background_0
       rect:
         serializedVersion: 2
         x: 7
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 021bf5d73f5027540800000000000000
-      internalID: 5004068679300657440
+      spriteID: da443b8c46528cbc0800000000000000
+      internalID: -3762716373873900371
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LKelp_Yellow_0: 5004068679300657440
+      LKelp_Background_0: -3762716373873900371
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0aa8d850396c8704c8de2ae1aa2e8499
+guid: 1ddb53b22f8bf624ea7133ba15572bd2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5004068679300657440
-    second: LKelp_Yellow_0
+      213: -7149688157030582073
+    second: mukry_water_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LKelp_Yellow_0
+      name: mukry_water_0
       rect:
         serializedVersion: 2
-        x: 7
+        x: 0
         y: 0
-        width: 172
-        height: 168
+        width: 640
+        height: 178
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 021bf5d73f5027540800000000000000
-      internalID: 5004068679300657440
+      spriteID: 7c8ff59708437cc90800000000000000
+      internalID: -7149688157030582073
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LKelp_Yellow_0: 5004068679300657440
+      mukry_water_0: -7149688157030582073
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
