@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: e73c60c4c0d87544dbd8fe4af7b8cfa3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -154,6 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interaction
   GM: {fileID: 0}
   PressE: {fileID: 8169737225654856780}
+  minigame: {fileID: 0}
+  interactedObject: {fileID: 0}
 --- !u!1 &8169737225654856780
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +235,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 56da8826997b8d545bb8baa4cd9b28d9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private TrailRenderer tr;
     private SpriteRenderer sr;
     private Animator animator;
+    public GameObject Minigame;
 
     [Header("Movement")]
     private float moveSpeed = 5.0f;
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (canMove == true)
+        if (canMove == true && !Minigame.activeSelf)
         {
             // Get player inputs
             moveInput.x = Input.GetAxisRaw("Horizontal");
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
             // Normalize movement
             moveInput.Normalize();
 
-            // Flip sprite to face movement direction (default sprite faces right)
+            // Flip sprite to face movement direction 
             if (moveInput.x > 0)
                 sr.flipX = false;
             else if (moveInput.x < 0)

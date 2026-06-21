@@ -37,12 +37,17 @@ public class Minigame : MonoBehaviour
     public Image urchinImage;
     [Tooltip("Sprites in order, from undamaged to fully cracked open.")]
     public Sprite[] urchinStages;
-    
+
     [Header("Input")]
     public KeyCode interactKey = KeyCode.E;
 
     [Header("Activate")]
     public GameObject MinigameObject;
+
+    // Which Interaction (urchin) currently has this minigame open. Set by Interaction.cs right
+    // before it activates the minigame, so completion only ever notifies the correct urchin.
+    [HideInInspector] public Interaction activeInteraction;
+
     private int direction = 1;
     private readonly List<RectTransform> activeZones = new List<RectTransform>();
     private int urchinStageIndex = 0;
@@ -64,7 +69,7 @@ public class Minigame : MonoBehaviour
     void Update()
     {
         MoveArrow();
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             CloseMiniGame();
         }
@@ -187,6 +192,13 @@ public class Minigame : MonoBehaviour
     {
         finished = true;
         MinigameObject.SetActive(false);
+
+        // Notify only the urchin that actually opened this minigame
+        if (activeInteraction != null)
+        {
+            activeInteraction.OnMinigameFinished();
+            activeInteraction = null;
+        }
     }
 
     public void ResetMinigame()
