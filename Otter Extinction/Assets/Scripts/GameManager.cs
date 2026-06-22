@@ -4,10 +4,15 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [Header("Day Cycle Settings")]
-    public int urchinsPerDay = 4;          
+    public int urchinsPerDay = 4;         
     [HideInInspector] public int urchinsInteractedToday = 0;
     public int currentDay = 1;
-    [HideInInspector] public bool readyForBed = false; 
+    [HideInInspector] public bool readyForBed = false;
+
+    [Header("Game Length")]
+    public int totalDays = 5;
+    public GameObject endingObject;        
+    [HideInInspector] public bool gameEnded = false;
 
     public event System.Action<GameObject> OnUrchinSpawned;
     public event System.Action<GameObject> OnUrchinCollected;
@@ -28,16 +33,17 @@ public class GameManager : MonoBehaviour
 
     [Header("Kelp Objects")]
     public List<GameObject> kelpObjects;   
+    [Header("Objects To Reveal")]
+    public List<GameObject> objectsToEnablePerDay; 
 
     [Header("Urchin Spawning")]
     public GameObject urchinPrefab;        
     public BoxCollider2D urchinSpawnArea;  
     public Minigame minigame;              
-    public List<GameObject> activeUrchins = new List<GameObject>();
+    private List<GameObject> activeUrchins = new List<GameObject>();
 
-    [Header("Sleep Time")]
+    [Header("SleepTime")]
     public GameObject BlackScreen;
-    public Animator SleepingAnimation;
 
     private void Start()
     {
@@ -46,8 +52,12 @@ public class GameManager : MonoBehaviour
         SpawnUrchinsForDay();
         BlackScreen.SetActive(false);
     }
+
+    // Called by Interaction.cs when a minigame finishes — pass in the urchin that was just collected
     public void AdvanceTime(GameObject collectedUrchin)
     {
+        if (gameEnded) return;
+
         urchinsInteractedToday++;
         UpdateSkySprite();
         OnUrchinCollected?.Invoke(collectedUrchin);
@@ -55,10 +65,11 @@ public class GameManager : MonoBehaviour
         if (urchinsInteractedToday >= urchinsPerDay)
         {
             readyForBed = true;
-            OnReadyForBed?.Invoke(); 
+            OnReadyForBed?.Invoke(); // ArrowManager shows the "go home" arrow on this
         }
     }
 
+    // Call this from a Home trigger zone once the player walks home with readyForBed == true
     public void GoToSleep()
     {
         if (!readyForBed) return;
@@ -70,10 +81,7 @@ public class GameManager : MonoBehaviour
         if (skyRenderer == null || skySprites == null || skySprites.Length < 3) return;
 
         if (urchinsInteractedToday == 1)
-        {
             skyRenderer.sprite = skySprites[0];
-            SleepingAnimation.SetBool("OnOrOff", true);
-        }
         else if (urchinsInteractedToday == 2 || urchinsInteractedToday == 3)
             skyRenderer.sprite = skySprites[1];
         else if (urchinsInteractedToday >= 4)
@@ -82,23 +90,48 @@ public class GameManager : MonoBehaviour
 
     public void EndDay()
     {
+        if (gameEnded) return; // ignore any extra calls once the game has already ended
+
         ClearTrash();
-        BlackScreen.SetActive(false);
 
         currentDay++;
         urchinsInteractedToday = 0;
         readyForBed = false;
 
-        int kelpIndex = currentDay - 2;
-        if (kelpIndex >= 0 && kelpIndex < kelpObjects.Count && kelpObjects[kelpIndex] != null)
+        if (currentDay > totalDays)
         {
-            kelpObjects[kelpIndex].SetActive(false);
+            TriggerEnding();
+            return;
+        }
+
+        // Day 2 affects index 0, Day 3 affects index 1, etc. — same ordering for both lists below.
+        int dayIndex = currentDay - 2;
+
+        if (dayIndex >= 0 && dayIndex < kelpObjects.Count && kelpObjects[dayIndex] != null)
+        {
+            kelpObjects[dayIndex].SetActive(false);
+        }
+
+        if (dayIndex >= 0 && dayIndex < objectsToEnablePerDay.Count && objectsToEnablePerDay[dayIndex] != null)
+        {
+            objectsToEnablePerDay[dayIndex].SetActive(true);
         }
 
         SpawnUrchinsForDay();
         SpawnTrashForDay();
 
-        OnDayEnded?.Invoke(); 
+        OnDayEnded?.Invoke(); // ArrowManager hides the "go home" arrow on this
+    }
+
+    private void TriggerEnding()
+    {
+        gameEnded = true;
+        ClearUrchins(); // nothing left wandering around once the credits start
+
+        if (endingObject != null)
+            endingObject.SetActive(true);
+
+        OnDayEnded?.Invoke();
     }
 
     private void SpawnTrashForDay()
@@ -136,7 +169,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnUrchinsForDay()
     {
-        ClearUrchins(); 
+        ClearUrchins(); // safety net in case any from the previous day were left un-interacted
 
         if (urchinPrefab == null || urchinSpawnArea == null) return;
 
@@ -151,6 +184,7 @@ public class GameManager : MonoBehaviour
 
             GameObject urchin = Instantiate(urchinPrefab, spawnPos, Quaternion.identity);
 
+            // Prefabs can't store references to scene objects, so wire them up here
             Interaction interaction = urchin.GetComponent<Interaction>();
             if (interaction != null)
             {
