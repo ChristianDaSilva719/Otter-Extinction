@@ -4,16 +4,17 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [Header("Day Cycle Settings")]
-    public int urchinsPerDay = 4;         
+    public int urchinsPerDay = 4;          // 4 urchins = full day = sleep
     [HideInInspector] public int urchinsInteractedToday = 0;
     public int currentDay = 1;
-    [HideInInspector] public bool readyForBed = false;
+    [HideInInspector] public bool readyForBed = false; // true once all of today's urchins are collected
 
     [Header("Game Length")]
     public int totalDays = 5;
-    public GameObject endingObject;        
+    public GameObject endingObject;        // SetActive(true) once totalDays is reached — hook your credits sequence to this
     [HideInInspector] public bool gameEnded = false;
 
+    // ArrowManager (and anything else) can subscribe to these instead of polling every frame
     public event System.Action<GameObject> OnUrchinSpawned;
     public event System.Action<GameObject> OnUrchinCollected;
     public event System.Action OnReadyForBed;
@@ -21,28 +22,47 @@ public class GameManager : MonoBehaviour
 
     [Header("Sky Sprites (Day Progression)")]
     public SpriteRenderer skyRenderer;
+    // skySprites[0] = morning (0 or 1 urchins)
+    // skySprites[1] = after 2nd AND 3rd urchin
+    // skySprites[2] = after 4th urchin (end of day)
     public Sprite[] skySprites;
 
     [Header("Trash Spawning")]
-    public GameObject trashPrefab;         
-    public Sprite[] trashSprites;          
-    public BoxCollider2D spawnArea;        
+    public GameObject trashPrefab;         // prefab with a SpriteRenderer on it
+    public Sprite[] trashSprites;          // your 9 trash sprites
+    public BoxCollider2D spawnArea;        // drag a BoxCollider2D over your map bounds (set isTrigger = true)
     public int baseTrashPerDay = 5;
-    public int trashIncreasePerDay = 2;    
+    public int trashIncreasePerDay = 2;    // how many more pieces of trash spawn each new day
     private List<GameObject> activeTrash = new List<GameObject>();
 
-    [Header("Kelp Objects")]
-    public List<GameObject> kelpObjects;   
-    [Header("Objects To Reveal")]
-    public List<GameObject> objectsToEnablePerDay; 
+    [Header("Kelp Objects (one disabled per day after Day 1)")]
+    public List<GameObject> kelpObjects;   // size 4, in the order you want them to disappear
+
+    [Header("Objects To Reveal (one enabled per day after Day 1)")]
+    public List<GameObject> objectsToEnablePerDay; // size 4, same day-2/3/4/5 ordering as kelpObjects above
+
+    [Header("Otters Sleeping (one disabled per day)")]
+    public List<GameObject> otterSleepingObjects;  // 4 otters in order — index 0 disabled on day 2, etc.
+    [Tooltip("The last otter that stays active on the final day — gets a new sprite and animation.")]
+    public UnityEngine.UI.Image lastOtterImage;
+    public Sprite lastOtterSprite;                 // the sprite to swap to on day 4
+
+    [Header("Images (one disabled per day)")]
+    public List<GameObject> imageObjects;          // 4 Image objects in order — index 0 disabled on day 2, etc.
+
+    [Header("Water - Day 3 Sprite Change")]
+    public SpriteRenderer waterSpriteRenderer;
+    public Sprite waterNewSprite;
+    public List<UnityEngine.UI.Image> waterUIImages;
+    public Sprite waterUINewSprite;                // all waterUIImages swap to this single sprite on day 3
 
     [Header("Urchin Spawning")]
-    public GameObject urchinPrefab;        
-    public BoxCollider2D urchinSpawnArea;  
-    public Minigame minigame;              
+    public GameObject urchinPrefab;        // prefab needs the Interaction script + its own PressE child
+    public BoxCollider2D urchinSpawnArea;  // drag a BoxCollider2D over where urchins can spawn (isTrigger = true)
+    public Minigame minigame;              // the single Minigame object in your scene, assigned to each spawned urchin
     private List<GameObject> activeUrchins = new List<GameObject>();
 
-    [Header("SleepTime")]
+    [Header("SleepingTime")]
     public GameObject BlackScreen;
 
     private void Start()
@@ -50,7 +70,6 @@ public class GameManager : MonoBehaviour
         UpdateSkySprite();
         SpawnTrashForDay();
         SpawnUrchinsForDay();
-        BlackScreen.SetActive(false);
     }
 
     // Called by Interaction.cs when a minigame finishes — pass in the urchin that was just collected
@@ -80,7 +99,9 @@ public class GameManager : MonoBehaviour
     {
         if (skyRenderer == null || skySprites == null || skySprites.Length < 3) return;
 
-        if (urchinsInteractedToday == 1)
+        if (urchinsInteractedToday == 0)
+            skyRenderer.sprite = skySprites[0];
+        else if (urchinsInteractedToday == 1)
             skyRenderer.sprite = skySprites[0];
         else if (urchinsInteractedToday == 2 || urchinsInteractedToday == 3)
             skyRenderer.sprite = skySprites[1];
@@ -97,6 +118,7 @@ public class GameManager : MonoBehaviour
         currentDay++;
         urchinsInteractedToday = 0;
         readyForBed = false;
+        UpdateSkySprite(); // reset sky to morning sprite immediately
 
         if (currentDay > totalDays)
         {
@@ -104,17 +126,39 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Day 2 affects index 0, Day 3 affects index 1, etc. — same ordering for both lists below.
+        // Day 2 affects index 0, Day 3 affects index 1, etc. — same ordering for all lists below.
         int dayIndex = currentDay - 2;
 
         if (dayIndex >= 0 && dayIndex < kelpObjects.Count && kelpObjects[dayIndex] != null)
-        {
             kelpObjects[dayIndex].SetActive(false);
-        }
 
         if (dayIndex >= 0 && dayIndex < objectsToEnablePerDay.Count && objectsToEnablePerDay[dayIndex] != null)
-        {
             objectsToEnablePerDay[dayIndex].SetActive(true);
+
+        if (dayIndex >= 0 && dayIndex < otterSleepingObjects.Count && otterSleepingObjects[dayIndex] != null)
+            otterSleepingObjects[dayIndex].SetActive(false);
+
+        if (dayIndex >= 0 && dayIndex < imageObjects.Count && imageObjects[dayIndex] != null)
+            imageObjects[dayIndex].SetActive(false);
+
+        // On day 4, swap the surviving otter's sprite — animation is handled in AnimationFunctions
+        if (currentDay == 4)
+        {
+            if (lastOtterImage != null && lastOtterSprite != null)
+                lastOtterImage.sprite = lastOtterSprite;
+        }
+
+        // On day 3, change the water sprites
+        if (currentDay == 3)
+        {
+            if (waterSpriteRenderer != null && waterNewSprite != null)
+                waterSpriteRenderer.sprite = waterNewSprite;
+
+            foreach (var img in waterUIImages)
+            {
+                if (img != null && waterUINewSprite != null)
+                    img.sprite = waterUINewSprite;
+            }
         }
 
         SpawnUrchinsForDay();
